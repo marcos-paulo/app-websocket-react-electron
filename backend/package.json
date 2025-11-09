@@ -5,9 +5,11 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "NODE_ENV=production node dist/server.js",
     "dev": "ts-node src/server.ts",
-    "dev:watch": "nodemon --exec ts-node src/server.ts"
+    "dev:watch": "nodemon --exec ts-node src/server.ts",
+    "build:all": "npm run build && cd ../frontend && npm run build",
+    "start:prod": "npm run build:all && NODE_ENV=production node dist/server.js"
   },
   "keywords": [
     "websocket",

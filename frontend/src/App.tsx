@@ -2,7 +2,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { useWebSocket } from './hooks/useWebSocket';
 import './App.css';
 
-const WEBSOCKET_URL = 'ws://localhost:8080';
+// Em produção, usa a mesma origem (window.location)
+// Em desenvolvimento, usa localhost:8080
+const getWebSocketUrl = () => {
+  if (import.meta.env.PROD) {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${protocol}//${window.location.host}`;
+  }
+  return 'ws://localhost:8080';
+};
+
+const WEBSOCKET_URL = getWebSocketUrl();
 
 function App() {
   const { messages, connectionStatus, sendMessage, connect, disconnect } = useWebSocket(WEBSOCKET_URL);

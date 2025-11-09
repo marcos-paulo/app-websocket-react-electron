@@ -33,23 +33,25 @@ api-fake-web-socket-react/
 - Node.js (versão 16 ou superior)
 - npm ou yarn
 
-### 1️⃣ Instalar Dependências
+### 🔧 Modo Desenvolvimento
 
-#### Backend
+#### 1️⃣ Instalar Dependências
+
+**Backend:**
 
 ```bash
 cd backend
 npm install
 ```
 
-#### Frontend
+**Frontend:**
 
 ```bash
 cd frontend
 npm install
 ```
 
-### 2️⃣ Executar o Backend
+#### 2️⃣ Executar o Backend
 
 Em um terminal, execute:
 
@@ -60,7 +62,7 @@ npm run dev
 
 O servidor WebSocket estará rodando em `ws://localhost:8080`
 
-### 3️⃣ Executar o Frontend
+#### 3️⃣ Executar o Frontend
 
 Em outro terminal, execute:
 
@@ -70,6 +72,54 @@ npm run dev
 ```
 
 O cliente React estará acessível em `http://localhost:3000`
+
+---
+
+### 🚀 Modo Produção
+
+Em produção, o backend serve os arquivos estáticos do frontend compilado.
+
+#### 1️⃣ Build e Execução Completa
+
+No diretório `backend`, execute:
+
+```bash
+cd backend
+npm run start:prod
+```
+
+Este comando irá:
+
+1. Compilar o backend TypeScript
+2. Compilar o frontend React
+3. Iniciar o servidor em modo produção na porta 8080
+
+Acesse: `http://localhost:8080` (HTTP e WebSocket na mesma porta!)
+
+#### 2️⃣ Build Manual (alternativo)
+
+```bash
+# Build do backend
+cd backend
+npm run build
+
+# Build do frontend
+cd ../frontend
+npm run build
+
+# Iniciar servidor em produção
+cd ../backend
+npm start
+```
+
+#### 3️⃣ Variáveis de Ambiente
+
+Crie um arquivo `.env` no diretório `backend`:
+
+```env
+NODE_ENV=production
+PORT=8080
+```
 
 ## 💡 Como Usar
 
@@ -105,16 +155,16 @@ O cliente React estará acessível em `http://localhost:3000`
 ```
 Cliente                          Servidor
   |                                 |
-  |-------- Conectar --------------->|
-  |<------- Welcome Message ---------|
+  |-------- Conectar -------------->|
+  |<------- Welcome Message --------|
   |                                 |
-  |<------- Heartbeat (5s) ----------|
-  |<------- Heartbeat (5s) ----------|
+  |<------- Heartbeat (5s) ---------|
+  |<------- Heartbeat (5s) ---------|
   |                                 |
-  |-------- Mensagem --------------->|
-  |<------- Resposta ----------------|
+  |-------- Mensagem -------------->|
+  |<------- Resposta ---------------|
   |                                 |
-  |-------- Desconectar ------------>|
+  |-------- Desconectar ----------->|
   |                                 |
   |                           [Finaliza]
 ```
