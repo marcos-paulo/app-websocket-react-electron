@@ -6,24 +6,43 @@ Esta é uma aplicação completa de WebSocket que demonstra comunicação bidire
 
 **O servidor backend é completamente finalizado quando o último cliente desconecta** (por exemplo, quando o navegador é fechado). Esta é uma característica única desta implementação.
 
-## 📁 Estrutura do Projeto
+## �️ Duas Implementações de Frontend
+
+Este projeto demonstra **duas abordagens diferentes** para gerenciamento de estado:
+
+1. **`frontend/`** - Usa **React Hooks** (`useState`, `useCallback`)
+2. **`frontend-redux/`** - Usa **Redux Toolkit** (recomendado para apps grandes)
+
+📖 Veja [COMPARISON.md](./COMPARISON.md) para comparação detalhada!
+
+## �📁 Estrutura do Projeto
 
 ```
 api-fake-web-socket-react/
-├── backend/           # Servidor WebSocket (Node.js + TypeScript)
+├── backend/              # Servidor WebSocket (Node.js + TypeScript)
 │   ├── src/
 │   │   └── server.ts
 │   ├── package.json
 │   └── tsconfig.json
-└── frontend/          # Cliente React (React + TypeScript + Vite)
-    ├── src/
-    │   ├── hooks/
-    │   │   └── useWebSocket.ts
-    │   ├── App.tsx
-    │   ├── App.css
-    │   └── main.tsx
-    ├── package.json
-    └── tsconfig.json
+├── frontend/             # Cliente React com useState
+│   ├── src/
+│   │   ├── hooks/
+│   │   │   └── useWebSocket.ts
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── package.json
+├── frontend-redux/       # Cliente React com Redux Toolkit
+│   ├── src/
+│   │   ├── store/
+│   │   │   ├── websocketSlice.ts
+│   │   │   ├── store.ts
+│   │   │   └── middleware/
+│   │   │       └── websocketMiddleware.ts
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── package.json
+├── COMPARISON.md         # Comparação detalhada
+└── README.md
 ```
 
 ## 🚀 Como Executar
