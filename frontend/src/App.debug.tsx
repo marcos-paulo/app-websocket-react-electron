@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useWebSocket } from './hooks/useWebSocket';
+import { useRenderCount } from './hooks/useRenderCount';
 import './App.css';
 
 // Em produção, usa a mesma origem (window.location)
@@ -15,7 +16,17 @@ const getWebSocketUrl = () => {
 const WEBSOCKET_URL = getWebSocketUrl();
 
 function App() {
-  const { messages, connectionStatus, sendMessage, connect, disconnect } = useWebSocket(WEBSOCKET_URL, true);
+  // 🔍 DEBUG: Detectar renderizações (remova em produção)
+  const renderInfo = useRenderCount('App Component');
+  
+  console.log('📊 Render Info:', {
+    renderCount: renderInfo.renderCount,
+    mountCount: renderInfo.mountCount,
+    isFirstMount: renderInfo.isFirstMount,
+    isFirstRender: renderInfo.isFirstRender,
+  });
+
+  const { messages, connectionStatus, sendMessage, connect, disconnect } = useWebSocket(WEBSOCKET_URL, renderInfo.isFirstMount === false);
   const [inputMessage, setInputMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -65,6 +76,23 @@ function App() {
       </header>
 
       <div className="content">
+        {/* 🔍 DEBUG INFO - Remova em produção */}
+        {import.meta.env.DEV && (
+          <div style={{ 
+            background: '#fff3cd', 
+            padding: '10px', 
+            borderRadius: '8px', 
+            marginBottom: '20px',
+            fontSize: '12px',
+            fontFamily: 'monospace'
+          }}>
+            <strong>🐛 Debug Info:</strong><br/>
+            Renderizações: {renderInfo.renderCount} | 
+            Montagens: {renderInfo.mountCount} |
+            {renderInfo.isFirstMount ? ' 🟢 Primeira montagem' : ' 🟡 Re-montagem'}
+          </div>
+        )}
+
         <div className="controls">
           <button
             onClick={connect}

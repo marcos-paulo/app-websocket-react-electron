@@ -116,30 +116,30 @@ wss.on("connection", (ws: WebSocket) => {
   });
 
   // Quando o cliente desconecta
-  ws.on("close", () => {
+  ws.on("close", (data) => {
     clientCount--;
     console.log(`❌ Cliente desconectado! Total de clientes: ${clientCount}`);
     clearInterval(interval);
 
     // FINALIZAR O SERVIDOR QUANDO TODOS OS CLIENTES DESCONECTAREM
-    if (clientCount === 0) {
-      console.log("\n⚠️  Todos os clientes desconectaram!");
-      console.log("🛑 Finalizando servidor WebSocket...");
+    // if (clientCount === 0) {
+    //   console.log("\n⚠️  Todos os clientes desconectaram!");
+    //   console.log("🛑 Finalizando servidor WebSocket...");
 
-      // Fechar o servidor WebSocket
-      wss.close(() => {
-        console.log("✅ Servidor WebSocket fechado");
+    //   // Fechar o servidor WebSocket
+    //   wss.close(() => {
+    //     console.log("✅ Servidor WebSocket fechado");
 
-        // Fechar o servidor HTTP
-        server.close(() => {
-          console.log("✅ Servidor HTTP fechado");
-          console.log("👋 Encerrando processo...\n");
+    //     // Fechar o servidor HTTP
+    //     server.close(() => {
+    //       console.log("✅ Servidor HTTP fechado");
+    //       console.log("👋 Encerrando processo...\n");
 
-          // Finalizar o processo
-          process.exit(0);
-        });
-      });
-    }
+    //       // Finalizar o processo
+    //       process.exit(0);
+    //     });
+    //   });
+    // }
   });
 
   // Tratar erros
@@ -161,27 +161,27 @@ server.listen(PORT, () => {
   console.log("📡 Aguardando conexões de clientes...\n");
 });
 
-// Tratar sinais de encerramento
-process.on("SIGINT", () => {
-  console.log("\n\n⚠️  Recebido sinal SIGINT (Ctrl+C)");
-  console.log("🛑 Finalizando servidor graciosamente...");
+// // Tratar sinais de encerramento
+// process.on("SIGINT", () => {
+//   console.log("\n\n⚠️  Recebido sinal SIGINT (Ctrl+C)");
+//   console.log("🛑 Finalizando servidor graciosamente...");
 
-  wss.close(() => {
-    server.close(() => {
-      console.log("✅ Servidor finalizado");
-      process.exit(0);
-    });
-  });
-});
+//   wss.close(() => {
+//     server.close(() => {
+//       console.log("✅ Servidor finalizado");
+//       process.exit(0);
+//     });
+//   });
+// });
 
-process.on("SIGTERM", () => {
-  console.log("\n\n⚠️  Recebido sinal SIGTERM");
-  console.log("🛑 Finalizando servidor graciosamente...");
+// process.on("SIGTERM", () => {
+//   console.log("\n\n⚠️  Recebido sinal SIGTERM");
+//   console.log("🛑 Finalizando servidor graciosamente...");
 
-  wss.close(() => {
-    server.close(() => {
-      console.log("✅ Servidor finalizado");
-      process.exit(0);
-    });
-  });
-});
+//   server.close(() => {
+//     wss.close(() => {
+//       console.log("✅ Servidor finalizado");
+//       process.exit(0);
+//     });
+//   });
+// });
