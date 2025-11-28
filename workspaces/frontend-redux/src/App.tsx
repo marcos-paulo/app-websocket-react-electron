@@ -80,6 +80,8 @@ function App() {
     }
   }, [connectionStatus]);
 
+  
+
   return (
     <div className="app">
       <header className="header">

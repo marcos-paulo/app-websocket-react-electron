@@ -168,24 +168,24 @@ class Server {
         clearInterval(interval);
 
         // FINALIZAR O SERVIDOR QUANDO TODOS OS CLIENTES DESCONECTAREM
-        // if (this.CLIENT_COUNT === 0) {
-        //   console.log("\n⚠️  Todos os clientes desconectaram!");
-        //   console.log("🛑 Finalizando servidor WebSocket...");
+        if (this.CLIENT_COUNT === 0) {
+          console.log("\n⚠️  Todos os clientes desconectaram!");
+          console.log("🛑 Finalizando servidor WebSocket...");
 
-        //   // Fechar o servidor WebSocket
-        //   wss.close(() => {
-        //     console.log("✅ Servidor WebSocket fechado");
+          // Fechar o servidor WebSocket
+          this.wss.close(() => {
+            console.log("✅ Servidor WebSocket fechado");
 
-        //     // Fechar o servidor HTTP
-        //     server.close(() => {
-        //       console.log("✅ Servidor HTTP fechado");
-        //       console.log("👋 Encerrando processo...\n");
+            // Fechar o servidor HTTP
+            this.server.close(() => {
+              console.log("✅ Servidor HTTP fechado");
+              console.log("👋 Encerrando processo...\n");
 
-        //       // Finalizar o processo
-        //       process.exit(0);
-        //     });
-        //   });
-        // }
+              // Finalizar o processo
+              process.exit(0);
+            });
+          });
+        }
       });
 
       // Tratar erros
@@ -225,6 +225,10 @@ class Server {
       this.verificarExixtenciaArquivosEstaticos();
 
       console.log("📡 Aguardando conexões de clientes...\n");
+    });
+
+    this.server.on("close", () => {
+      console.log("🛑 Servidor HTTP está fechando...");
     });
   }
 }

@@ -1,0 +1,38 @@
+{
+  "name": "websocket-app-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo da aplicação WebSocket com React e TypeScript",
+  "private": true,
+  "workspaces": [
+    "workspaces/*"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "build:shared": "npm run build --workspace=@websocket-app/shared-types",
+    "build:backend": "npm run build --workspace=@websocket-app/backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:all": "npm run build:shared && npm run build:backend && npm run build:frontend",
+    "dev:shared": "npm run dev:watch --workspace=@websocket-app/shared-types",
+    "dev:backend": "wait-on workspaces/shared-types/dist/index.js && npm run dev --workspace=backend",
+    "dev:frontend": "wait-on tcp:8080 && npm run dev --workspace=frontend",
+    "dev:all": "concurrently --names \"SHARED,BACKEND,FRONTEND\" --prefix-colors \"cyan,green,blue\" --kill-others \"npm:dev:shared\" \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "start:backend": "npm start --workspace=backend",
+    "start:prod": "npm run build:all && npm run start:backend",
+    "clean": "npm run clean --workspace=@websocket-app/shared-types && rm -rf backend/dist frontend/dist backend/node_modules frontend/node_modules shared-types/node_modules node_modules",
+    "lint:backend": "npm run lint --workspace=backend",
+    "lint:frontend": "npm run lint --workspace=frontend"
+  },
+  "keywords": [
+    "websocket",
+    "react",
+    "typescript",
+    "monorepo",
+    "npm-workspaces"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wait-on": "^9.0.3"
+  }
+}

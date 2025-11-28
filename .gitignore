@@ -8,9 +8,15 @@ lerna-debug.log*
 
 # Dependencies
 node_modules/
+*/node_modules/
+package-lock.json
+*/package-lock.json
 
 # Build outputs
 dist/
+*/dist/
+build/
+*/build/
 dist-ssr/
 *.local
 
