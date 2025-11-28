@@ -2,6 +2,14 @@ import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
 import fs from "fs";
 import path from "path";
+import {
+  ServerMessageType,
+  isClientMessageType,
+} from "@websocket-app/shared-types";
+
+const a: ServerMessageType = "welcome";
+
+isClientMessageType("message");
 
 class Server {
   private PORT = process.env.PORT || 8080;
@@ -198,7 +206,7 @@ class Server {
       }
 
       try {
-        fs.readdirSync(this.INDEX_FILE_PATH);
+        fs.existsSync(this.INDEX_FILE_PATH);
       } catch (error) {
         console.error("❌ \x1b[31mArquivo index.html não encontrado:\x1b[0m");
         console.error(error);
