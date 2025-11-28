@@ -8,7 +8,4 @@ export default defineConfig({
     port: 3001,
     open: "/usr/bin/firefox",
   },
-  build: {
-    outDir: "build", // Diretório de saída do build
-  },
 });
