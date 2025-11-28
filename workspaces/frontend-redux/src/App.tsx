@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { connectRequest, disconnectRequest, sendMessage, clearMessages } from './store/websocketSlice';
 import { useAutoConnect } from './hooks/useAutoConnect';
+import DisconnectedPage from './components/DisconnectedPage';
 import './App.css';
 
 // Em produção, usa a mesma origem (window.location)
@@ -24,9 +25,33 @@ function App() {
   
   // Estado local para input de mensagem
   const [inputMessage, setInputMessage] = useState('');
+  
+  // Estado para controlar se deve mostrar a página de desconexão
+  const [showDisconnectedPage, setShowDisconnectedPage] = useState(false);
 
   // Auto-conectar quando o componente montar
   useAutoConnect(WEBSOCKET_URL, true);
+
+  // Detectar quando o usuário desconecta e mostrar a página de desconexão
+  useEffect(() => {
+    // Verifica se houve uma desconexão intencional (usuário clicou em desconectar)
+    if (connectionStatus === 'disconnected' && showDisconnectedPage) {
+      // Substitui a entrada atual do histórico para impedir voltar
+      window.history.pushState(null, '', window.location.href);
+      window.history.pushState(null, '', window.location.href);
+      
+      // Previne a navegação de volta
+      const preventBack = () => {
+        window.history.pushState(null, '', window.location.href);
+      };
+      
+      window.addEventListener('popstate', preventBack);
+      
+      return () => {
+        window.removeEventListener('popstate', preventBack);
+      };
+    }
+  }, [connectionStatus, showDisconnectedPage]);
 
   // Handlers
   const handleConnect = useCallback(() => {
@@ -35,6 +60,10 @@ function App() {
 
   const handleDisconnect = useCallback(() => {
     dispatch(disconnectRequest());
+    // Ativa a página de desconexão após desconectar
+    setTimeout(() => {
+      setShowDisconnectedPage(true);
+    }, 500); // Pequeno delay para permitir a animação de desconexão
   }, [dispatch]);
 
   const handleSendMessage = useCallback(() => {
@@ -80,7 +109,16 @@ function App() {
     }
   }, [connectionStatus]);
 
-  
+  // Handler para recarregar a aplicação
+  const handleReload = useCallback(() => {
+    setShowDisconnectedPage(false);
+    window.location.href = '/';
+  }, []);
+
+  // Se deve mostrar a página de desconexão
+  if (showDisconnectedPage) {
+    return <DisconnectedPage onReload={handleReload} />;
+  }
 
   return (
     <div className="app">

@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3001,
-    open: "/usr/bin/firefox",
+    open: false, // Não abre automaticamente, será aberto pelo script concurrently
   },
 });
