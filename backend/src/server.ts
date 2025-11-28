@@ -6,6 +6,7 @@ import path from "path";
 const PORT = process.env.PORT || 8080;
 const NODE_ENV = process.env.NODE_ENV || "development";
 const STATIC_DIR = path.join(__dirname, "../../frontend/dist");
+// const STATIC_DIR = path.join(__dirname, "../../frontend-redux/dist");
 
 // MIME types para servir arquivos estáticos
 const MIME_TYPES: { [key: string]: string } = {
@@ -25,13 +26,16 @@ const MIME_TYPES: { [key: string]: string } = {
 const server = http.createServer((req, res) => {
   // Em produção, servir arquivos estáticos
   if (NODE_ENV === "production") {
+    console.log("modo produção");
     let filePath = path.join(
       STATIC_DIR,
       req.url === "/" ? "index.html" : req.url || ""
     );
+    console.log("Requisição para:", filePath);
 
     // Se o arquivo não existir, servir index.html (SPA routing)
     if (!fs.existsSync(filePath)) {
+      console.log("Arquivo não encontrado, servindo index.html");
       filePath = path.join(STATIC_DIR, "index.html");
     }
 
@@ -53,6 +57,7 @@ const server = http.createServer((req, res) => {
       }
     });
   } else {
+    console.log("modo desenvolvimento");
     // Em desenvolvimento, retornar mensagem
     res.writeHead(200, { "Content-Type": "text/html" });
     res.end(
@@ -155,7 +160,13 @@ server.listen(PORT, () => {
   console.log(`✅ Servidor WebSocket rodando em ws://localhost:${PORT}`);
 
   if (NODE_ENV === "production") {
-    console.log(`📁 Servindo arquivos estáticos de: ${STATIC_DIR}`);
+    try {
+      fs.existsSync(STATIC_DIR);
+      console.log(`📁 Servindo arquivos estáticos de: ${STATIC_DIR}`);
+    } catch (error) {
+      console.error("❌ Diretório estático não encontrado:", error);
+      process.exit(1);
+    }
   }
 
   console.log("📡 Aguardando conexões de clientes...\n");

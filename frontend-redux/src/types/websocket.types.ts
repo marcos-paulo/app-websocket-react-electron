@@ -2,6 +2,7 @@
 export type ConnectionStatus =
   | "connecting"
   | "connected"
+  | "disconnecting"
   | "disconnected"
   | "error";
 
@@ -15,8 +16,9 @@ export interface Message {
 export interface WebSocketState {
   messages: Message[];
   connectionStatus: ConnectionStatus;
-  wsInstance: WebSocket | null;
+  hasAttemptedConnection: boolean;
   isConnecting: boolean;
+  isDisconnecting: boolean;
   error: string | null;
 }
 

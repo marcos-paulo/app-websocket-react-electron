@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import websocketReducer from "./websocketSlice";
+import websocketReducer, { WebSocketState } from "./websocketSlice";
 import { websocketMiddleware } from "./middleware/websocketMiddleware";
 
 export const store = configureStore({
@@ -7,18 +7,19 @@ export const store = configureStore({
     websocket: websocketReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      // Desabilitar verificação de serializabilidade para WebSocket instance
-      serializableCheck: {
-        ignoredActions: [
-          "websocket/connectSuccess",
-          "websocket/updateWsInstance",
-        ],
-        ignoredPaths: ["websocket.wsInstance"],
-      },
-    }).concat(websocketMiddleware),
+    // {
+    // // Desabilitar verificação de serializabilidade para WebSocket instance
+    //   serializableCheck: {
+    //     ignoredActions: [
+    //       "websocket/connectSuccess",
+    //       "websocket/updateWsInstance",
+    //     ],
+    //     ignoredPaths: ["websocket.wsInstance"],
+    //   },
+    // }
+    getDefaultMiddleware().concat(websocketMiddleware),
 });
 
 // Tipos inferidos do store
-export type RootState = ReturnType<typeof store.getState>;
+export type RootReducer = { websocket: WebSocketState };
 export type AppDispatch = typeof store.dispatch;

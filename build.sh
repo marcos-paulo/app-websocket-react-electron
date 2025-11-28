@@ -14,7 +14,7 @@ fi
 
 # Build do frontend
 echo "📦 Compilando frontend..."
-cd ../frontend
+cd ../frontend-redux
 npm run build
 
 if [ $? -ne 0 ]; then

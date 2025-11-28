@@ -71,6 +71,8 @@ function App() {
         return 'Conectando...';
       case 'disconnected':
         return 'Desconectado';
+      case 'disconnecting':
+        return 'Desconectando...';
       case 'error':
         return 'Erro na conexão';
       default:
