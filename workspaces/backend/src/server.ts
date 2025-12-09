@@ -2,19 +2,17 @@ import WebSocket, { WebSocketServer } from "ws";
 import http from "http";
 import fs from "fs";
 import path from "path";
-import {
-  ServerMessageType,
-  isClientMessageType,
-} from "@websocket-app/shared-types";
+import { ServerMessageType, isClientMessageType } from "@app/shared/websocket";
+import "@app/shared/detect-envs";
 
 const a: ServerMessageType = "welcome";
 
 isClientMessageType("message");
 
 class Server {
-  private PORT = process.env.PORT || 8080;
-  private NODE_ENV = process.env.NODE_ENV || "development";
-  private STATIC_DIR = path.join(__dirname, "../../frontend-redux/dist");
+  private PORT = process.env.PORT_WS;
+  private NODE_ENV = process.env.NODE_ENV;
+  private STATIC_DIR = path.join(__dirname, "../../frontend/dist");
   private INDEX_FILE_NAME = "index.html";
   private INDEX_FILE_PATH = path.join(this.STATIC_DIR, this.INDEX_FILE_NAME);
 
@@ -48,7 +46,7 @@ class Server {
     // Criar servidor HTTP que serve arquivos estáticos em produção
     this.server = http.createServer((req, res) => {
       // Em produção, servir arquivos estáticos
-      if (this.NODE_ENV === "production") {
+      if (this.NODE_ENV === "production-frontend-server") {
         let filePath = path.join(
           this.STATIC_DIR,
           req.url === "/" ? this.INDEX_FILE_NAME : req.url || ""
@@ -84,6 +82,13 @@ class Server {
             res.end(content, "utf-8");
           }
         });
+      } else if (this.NODE_ENV === "production") {
+        console.log("⚠️ Modo electron-production");
+        // Em produção com Electron, servir mensagem
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(
+          "<h1>WebSocket Server</h1><p>Servidor rodando em modo production. Use o frontend empacotado no Electron.</p>"
+        );
       } else {
         console.log("⚠️ Modo desenvolvimento");
         // Em desenvolvimento, retornar mensagem
@@ -215,6 +220,21 @@ class Server {
     }
   }
 
+  finalizarServidor() {
+    console.log("🛑 Finalizando servidor graciosamente...");
+
+    this.wss.close(() => {
+      this.server.close(() => {
+        console.log("✅ Servidor finalizado");
+        process.exit(0);
+      });
+    });
+  }
+
+  /**
+   * Inicia o servidor HTTP e WebSocket.
+   */
+
   iniciarServidor() {
     // prettier-ignore
     this.server.listen(this.PORT, () => {
@@ -230,34 +250,17 @@ class Server {
     this.server.on("close", () => {
       console.log("🛑 Servidor HTTP está fechando...");
     });
+
+    process.on("SIGINT", () => {
+      console.log("\n⚠️  Recebido sinal SIGINT (Ctrl+C)");
+      this.finalizarServidor();
+    });
+
+    process.on("SIGTERM", () => {
+      console.log("\n⚠️  Recebido sinal SIGTERM");
+      this.finalizarServidor();
+    });
   }
 }
 
 Server.builder();
-
-// Iniciar servidor HTTP
-
-// // Tratar sinais de encerramento
-// process.on("SIGINT", () => {
-//   console.log("\n\n⚠️  Recebido sinal SIGINT (Ctrl+C)");
-//   console.log("🛑 Finalizando servidor graciosamente...");
-
-//   wss.close(() => {
-//     server.close(() => {
-//       console.log("✅ Servidor finalizado");
-//       process.exit(0);
-//     });
-//   });
-// });
-
-// process.on("SIGTERM", () => {
-//   console.log("\n\n⚠️  Recebido sinal SIGTERM");
-//   console.log("🛑 Finalizando servidor graciosamente...");
-
-//   server.close(() => {
-//     wss.close(() => {
-//       console.log("✅ Servidor finalizado");
-//       process.exit(0);
-//     });
-//   });
-// });

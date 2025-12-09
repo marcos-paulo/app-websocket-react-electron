@@ -1,0 +1,54 @@
+{
+  "name": "@app/electron",
+  "version": "1.0.0",
+  "description": "Electron app for WebSocket application",
+  "main": "dist/main.js",
+  "private": true,
+  "author": {
+    "name": "Marcos Paulo",
+    "email": "marcos@email.com",
+    "url": "https://www.marcos.com.br"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "build:watch": "rm -rf dist && tsc --watch",
+    "dev": "npm run build && electron .",
+    "package": "npm run build && electron-builder",
+    "clean": "rm -rf dist node_modules",
+    "START:PROD": "----------------------------------------------------------------------",
+    "start:prod:with:front:server": "NODE_ENV=production-frontend-server electron .",
+    "build:start:prod:with:front:server": "npm run build && npm run start:prod:with:front:server",
+    "start:prod": "NODE_ENV=production electron .",
+    "build:start:prod": "npm run build && npm run start:prod"
+  },
+  "dependencies": {
+    "@app/shared": "*"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "electron": "39.2.0",
+    "electron-builder": "^26.3.4",
+    "typescript": "^5.2.2"
+  },
+  "build": {
+    "appId": "com.app.electron",
+    "productName": "App",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json",
+      "../frontend/dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../frontend/dist",
+        "to": "frontend/dist"
+      }
+    ],
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "@app/shared",
+  "version": "1.0.0",
+  "description": "Tipos TypeScript compartilhados para comunicação WebSocket",
+  "exports": {
+    "./detect-envs": {
+      "types": "./dist/detect-envs/index.d.ts",
+      "require": "./dist/detect-envs/index.js",
+      "import": "./dist/detect-envs/index.js"
+    },
+    "./websocket": {
+      "types": "./dist/websocket/index.d.ts",
+      "require": "./dist/websocket/index.js",
+      "import": "./dist/websocket/index.js"
+    },
+    "./initialize-app": {
+      "types": "./dist/initialize-app/index.d.ts",
+      "require": "./dist/initialize-app/index.js",
+      "import": "./dist/initialize-app/index.js"
+    },
+    "./global-types": {
+      "types": "./dist/global-types/index.d.ts",
+      "require": "./dist/global-types/index.js",
+      "import": "./dist/global-types/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "websocket": [
+        "dist/websocket/index.d.ts"
+      ],
+      "initialize-app": [
+        "dist/initialize-app/index.d.ts"
+      ],
+      "global-types": [
+        "dist/global-types/index.d.ts"
+      ],
+      "detect-envs": [
+        "dist/detect-envs/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "dev:watch": "rm -rf dist && tsc --watch",
+    "clean": "rm -rf dist node_modules",
+    "start:app": "node ./dist/initialize-app/start-app.js"
+  },
+  "keywords": [
+    "websocket",
+    "typescript",
+    "types",
+    "shared"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@types/wait-on": "^5.3.4",
+    "detect-port": "^2.1.0",
+    "typescript": "^5.9.3",
+    "wait-on": "^9.0.3"
+  }
+}
